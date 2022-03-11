@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      body{
+        background-color : black;
+        color : white;
+      }
+      #input{
+        width : 85%;
+        height : 3rem;
+        border : none;
+        border-radius : 14px;
+        background-color : black;
+        color : white;
+        font-size : 2rem;
+      }
+      #btn{
+        width : 3rem;
+        height : 3rem;
+        background-color : transparent;
+        border-color : transparent;
+      }
+      i{
+        width : 1.8cm;
+        height : 1.8cm;
+        color : white;
+      }
+      #messages{
+        width : 90%;
+        height : 700px;
+        border : 4px white solid;
+        border-radius : 14px;
+        overflow-y: scroll;
+        background-color : black;
+
+      }
+      .msg{
+        border : 3px solid white;
+        width : fit-content;
+        height : auto;
+        border-radius : 20px;
+        margin : 20px;
+        padding-left : 5px;
+        padding-right : 5px;
+        color : black;
+        background-color : white;
+
+      }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+  </head>
+  <body>
+
+    <div id="messages">
+
+      <%data.forEach((data)=>{%>
+        <div class="msg"><h3><sup><%=data.user %> : </sup><%=data.msg%></h3></div>
+      <%})%>
+    </div>
+    <form id="form" action="">
+
+      <input id="input" placeholder="Enter Msg" autocomplete="off" />
+      <button id="btn"><h1><i class="fa fa-paper-plane" aria-hidden="true"></i></h1></button>
+
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+      var socket = io();
+
+      var messages = document.getElementById('messages');
+      var form = document.getElementById('form');
+      var input = document.getElementById('input');
+      let username;
+      do {
+        username = prompt("User-Name")
+      } while (username.length<3 || !username);
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit('chat message', input.value,username);
+          //socket.emit('user', username);
+          socket.emit('message',`${input.value}`)
+          socket.emit('new-user-joined', username)
+          input.value = '';
+        }
+      });
+
+      socket.on('chat message', function(msg) {
+        var item = document.createElement('h3');
+        item.classList.add('msg')
+        item.textContent = msg;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+      socket.on('new-user-joined', function(newUser) {
+        var item = document.createElement('sup');
+        item.classList.add('msg')
+        item.textContent = newUser;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+      /*socket.on('user', function(username) {
+        var item = document.createElement('li');
+        item.textContent = username;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+      const mongoose = require('mongoose')
+      const Msg = require('./db/messages')
+      const user = new Msg({msg : username+ ":" + input.value})
+      user.save().then(()=>{
+        console.log("data saved")
+     })
+*/
+
+    </script>
+  </body>
+</html>
