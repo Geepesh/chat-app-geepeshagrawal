@@ -1,0 +1,14 @@
+{
+  "name": "Mice-Chat-App",
+  "version": "0.0.1",
+  "description": "Real time chat application by geepesh agrawal",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.4",
+    "socket.io": "^4.1.2"
+  },
+  "scripts": {
+    "start": "nodemon index.js"
+  }
+}
