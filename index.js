@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 
 
 //const User = require('./db/user')
-const mongodb = "mongodb+srv://geepesh_agrawal:geepeshagrawal@cluster0.n8viw.mongodb.net/message-database?retryWrites=true&w=majority"
+const mongodb = "mongodb+srv://<username>:<password>@cluster0.n8viw.mongodb.net/<database-name>?retryWrites=true&w=majority"
 
 mongoose.connect(mongodb).then(()=>{
   console.log('database connected!!!');
@@ -45,9 +45,9 @@ io.on('connection', (socket) => {
   Msg.find().then((result)=>{
     socket.emit('outPutMsg',result)
   })
-  //console.log('active')
+  console.log('active')
   socket.on('disconnect',(socket)=>{
-  //console.log('deactive')
+  console.log('deactive')
  })
   socket.on('chat message', (msg,user) => {
 
@@ -56,12 +56,6 @@ io.on('connection', (socket) => {
      io.emit('chat message', msg,user);
     })
   })
-  /*socket.on('user', username => {
-
-      io.emit('user', username);
-
-
-  });*/
   socket.on('new-user-joined', newUser => {
     io.emit('new-user-joined', newUser);
   });
